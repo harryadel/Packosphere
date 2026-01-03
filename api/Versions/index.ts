@@ -91,6 +91,6 @@ const VersionsSchema = new SimpleSchema({
   },
 });
 
-Versions.attachSchema(VersionsSchema);
+// Versions.attachSchema(VersionsSchema);
 
 export { Versions, VersionsSchema };

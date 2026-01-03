@@ -39,7 +39,8 @@ const PackagesSchema = new SimpleSchema({
   }),
 });
 
-Packages.attachSchema(PackagesSchema);
+// Packages.attachSchema(PackagesSchema);
+
 export interface IPackagesQueryResult extends Package {
   currentVersion: LatestPackage
 }
