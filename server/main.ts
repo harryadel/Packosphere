@@ -6,6 +6,7 @@ import { WebApp } from 'meteor/webapp';
 import './modules/bots';
 import './modules/accounts';
 import './api';
+import './mcp';
 import '../imports/ui/App';
 
 // Tell Meteor to publish the meteor-developer email address so that fast render sends it with html

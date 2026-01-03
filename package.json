@@ -31,7 +31,8 @@
     "s-ago": "^2.2.0",
     "simpl-schema": "^1.12.0",
     "slug": "^4.0.2",
-    "twitter-api-v2": "^1.28.0"
+    "twitter-api-v2": "^1.28.0",
+    "zod": "^4.3.4"
   },
   "devDependencies": {
     "@types/graphql": "^14.5.0",
