@@ -5,6 +5,7 @@ import { PackageServer, ReleaseVersion } from 'meteor/peerlibrary:meteor-package
 import { makePackosphereLink } from '../../../imports/utils';
 import { postTwitterStatus } from './twitterbot';
 import { postToSlack } from './slackbot';
+import { postToDiscord } from './discordbot';
 import { Meteor } from 'meteor/meteor';
 
 interface BotSettings {
@@ -30,6 +31,7 @@ const batchAnnouncePackageUpdates = async (): Promise<void> => {
 
   let twitterText: string = '';
   let slackText: string = '';
+  let discordText: string = '';
 
   const count = await cursor.countAsync();
   if (count > 0) {
@@ -37,9 +39,11 @@ const batchAnnouncePackageUpdates = async (): Promise<void> => {
       const { packageName, version } = doc;
       const twitterVersion = `${packageName}@${version}\n`;
       const slackVersion = `\`${packageName}@${version}\`\n`;
+      const discordVersion = `\`${packageName}@${version}\`\n`;
       const link = `${makePackosphereLink(packageName)}\n\n`;
       twitterText += twitterVersion + link;
       slackText += slackVersion + link;
+      discordText += discordVersion + link;
       if (twitterText.length > 160) {
         void postTwitterStatus(`New Package Releases:\n\n${twitterText}`);
         twitterText = '';
@@ -50,6 +54,7 @@ const batchAnnouncePackageUpdates = async (): Promise<void> => {
       void postTwitterStatus(`New Package Releases:\n\n${twitterText}`);
     }
     void postToSlack(`New Package Releases:\n\n${slackText}`);
+    void postToDiscord(`**New Package Releases**\n\n${discordText}`);
     await Settings.set('lastAnnounceTime', new Date());
   }
 };
@@ -68,12 +73,14 @@ if (Meteor.isProduction) {
     ReleaseVersions.after.insert(async (userId: string, doc: ReleaseVersion) => {
       const { track, version } = doc;
       if (track === 'METEOR') {
-        const beginning = 'New Meteor Release:';
+        const beginning = 'New Meteor Release: ';
         const slackText = `\`${track}@${version}\``;
         const twitterText = `${track}@${version}`;
+        const discordText = `\`${track}@${version}\``;
 
         void postToSlack(beginning + slackText);
         void postTwitterStatus(beginning + twitterText);
+        void postToDiscord(`**${beginning}${discordText}**`);
       }
     });
 
@@ -84,11 +91,13 @@ if (Meteor.isProduction) {
       if (recommended !== previousRecommend && recommended) {
         const slackText = `\`${track}@${version}\``;
         const twitterText = `${track}@${version}`;
+        const discordText = `\`${track}@${version}\``;
 
         const ending = ' is now a recommended release. \n\nTime to update your apps!';
 
         void postToSlack(slackText + ending);
         void postTwitterStatus(twitterText + ending);
+        void postToDiscord(`**${discordText}**${ending}`);
       }
     });
   });
