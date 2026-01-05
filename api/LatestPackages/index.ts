@@ -5,7 +5,7 @@ import { Packages } from '../Packages';
 import { Versions, VersionsSchema } from '../Versions';
 const { LatestPackages } = PackageServer;
 
-// LatestPackages.attachSchema(VersionsSchema);
+LatestPackages.attachSchema(VersionsSchema);
 
 export interface ILatestPackagesQueryResult extends LatestPackage {
   meta: Package
